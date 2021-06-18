@@ -9,7 +9,8 @@ from torchvision import transforms
 from sklearn.metrics import f1_score
 
 
-import albumentations as albu
+import albumentations as A
+from albumentations.pytorch import ToTensorV2
 import numpy as np
 import pandas as pd
 
@@ -45,11 +46,10 @@ arg_parser.add_argument('--batch', type=int, default=32)
 
 args = arg_parser.parse_args()
 
-
 # Random Seed
 def seed_everything(seed):
     """
-    동일한 조건으로 학습을 할 때, 동일한 결과를 얻기 위해 seed를 고정시킵니다.
+    동일한 결과를 얻기 위한 seed를 고정
     
     Args:
         seed: seed 정수값
@@ -79,6 +79,7 @@ def eval_func(model, data_iter, device):
     model.train()
     return count/total_count
 
+# Evaluation in binary cross-entropy env
 def eval_func_bce(model, data_iter, device):
     model.eval()
     with torch.no_grad():
@@ -88,7 +89,6 @@ def eval_func_bce(model, data_iter, device):
             y = batch_label.unsqueeze(1).to(device)
             y_pred = model.forward(x)
             y_ = y_pred>0.5
-            # y_ = torch.argmax(y_pred, dim=-1)
             k = y == y_
             count += (y==y_).sum().item()
 
@@ -96,12 +96,11 @@ def eval_func_bce(model, data_iter, device):
     model.train()
     return count/total_count
 
-
 # PreProcessing
 image_root = '../data/train/images'
 mask_label_num, gender_label_num, age_label_num = 3,2,3
 csv_path = '../data/train/train.csv'
-k_list = range(5) # 0,1,2,3,4 중에 어디부분을 자를까?
+k_list = range(5) 
 
 for k in k_list:
     dir_list = glob.glob(image_root + '/*')
@@ -111,9 +110,9 @@ for k in k_list:
     train_dir_list, validation_dir_list = get_train_validation_dir_list(df, k, image_root) # 2163, 537
     train_jpg_list, validation_jpg_list = get_train_validation_jpg_list(train_dir_list, validation_dir_list) # 14220, 3759
     tag2label = make_tag2label(mask_label_num, gender_label_num, age_label_num)
-    tag2label_mask = make_tag2label_mask(mask_label_num)
-    tag2label_gender = make_tag2label_gender(gender_label_num)
-    tag2label_age = make_tag2label_age(age_label_num)
+    tag2label_mask = make_tag2label_seperate(mask_label_num)
+    tag2label_gender = make_tag2label_seperate(gender_label_num)
+    tag2label_age = make_tag2label_seperate(age_label_num)
 
     train_dataset = make_dataset(train_jpg_list, tag2label)
     train_dataset_mask = make_dataset_mask(train_jpg_list, tag2label_mask)
@@ -131,11 +130,11 @@ for k in k_list:
     # 데이터 불러오기
     batch_size = args.batch
 
-    transform = albu.Compose([
-        albu.Resize(height=256*2,width=192*2),
-        albu.OneOf([albu.Rotate(5),albu.Rotate(10)]),
-        albu.HorizontalFlip(p=0.5),
-        albu.Normalize(),
+    transform = A.Compose([
+        A.Resize(height=256*2,width=192*2),
+        A.OneOf([A.Rotate(5),A.Rotate(10)]),
+        A.HorizontalFlip(p=0.5),
+        A.Normalize(),
         ])
 
     train_data = MyDataset(dataset, transform)

@@ -1,5 +1,5 @@
 import torch
-from torch.utils.data import Dataset, DataLoader
+from torch.utils.data import Dataset
 import torchvision
 from torchvision import transforms
 
@@ -9,8 +9,6 @@ from time import time
 import cv2
 import numpy as np
 import os
-from PIL import Image
-
 
 # Dataset 클래스 생성
 class MyDataset(Dataset):
@@ -20,9 +18,9 @@ class MyDataset(Dataset):
         self.image = []
         self.label = []
         self.transform = transform
-        for img, lab in self.root_list:
+        for img, label in self.root_list:
             self.image.append(img)
-            self.label.append(lab)
+            self.label.append(label)
         
 
     def __getitem__(self, idx):

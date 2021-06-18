@@ -29,7 +29,6 @@ class PreTrainedEfficientNet(nn.Module):
         self.set_freeze()
 
 
-
     def forward(self, x):
         x = self.backbone(x)
         x1 = self.drop1(x)
@@ -37,7 +36,7 @@ class PreTrainedEfficientNet(nn.Module):
         x1 = self.fc(x1)
         x2 = self.fc(x2)
         x = (x1+x2)/2
-        # return torch.sigmoid(x)
+        # return torch.sigmoid(x) # in binary cross-entropy env
         return x
 
     def set_freeze(self):
