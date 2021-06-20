@@ -7,11 +7,9 @@
 - ensemble.py
   - 여러 모델을 ensemble하여 추론 할 수 있도록 만든 코드
 
-- infer.py
-  - 한 가지 모델을 추론하여 csv파일로 저장해주는 파일입니다.
-
-- infer_sep.py
-  - 모델 구조를 mask, gender, age 3가지로 나누어 만든 모델 추론 코드
+- inference.py
+  - 모델을 추론하여 csv파일로 저장해주는 파일입니다.
+  - NOTE: -seperate(bool)을 조정하여 전체 클래스를 classification하는 경우와 mask, gender, age 세종류 모델로 나누어 추론하는 경우를 선택할 수 있습니다.
 
 - loss.py
   - 이미지 분류에 사용되는 다양한 Loss를 정의한 파일입니다.

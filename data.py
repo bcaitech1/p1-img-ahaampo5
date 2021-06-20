@@ -80,30 +80,11 @@ def make_tag2label(mask_label_num, gender_label_num, age_label_num):
     return tag2label       
 
 
-def make_tag2label_mask(mask_label_num):
+def make_tag2label_seperate(seperate_label_num):
     tag2label = defaultdict()
     label_num = 0
-    mask_list = list(map(str,range(mask_label_num)))
-    for i in mask_list:
-        tag2label[i] = label_num
-        label_num += 1
-    return tag2label
-
-def make_tag2label_gender(gender_label_num):
-    tag2label = defaultdict()
-    label_num = 0
-    gender_list = list(map(str,range(gender_label_num)))
-    for i in gender_list:
-        tag2label[i] = label_num
-        label_num += 1
-    return tag2label
-
-
-def make_tag2label_age(age_label_num):
-    tag2label = defaultdict()
-    label_num = 0
-    age_list = list(map(str,range(age_label_num)))
-    for i in age_list:
+    seperate_list = list(map(str,range(seperate_label_num)))
+    for i in seperate_list:
         tag2label[i] = label_num
         label_num += 1
     return tag2label
